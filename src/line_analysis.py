@@ -46,4 +46,4 @@ def line_parse(line):
     else:
         https = False
 
-    return(commented, binary, https, URL, branch, main, contrib, free, ftp)
+    return(commented, binary, https, str(URL), str(branch), main, contrib, free, ftp)
