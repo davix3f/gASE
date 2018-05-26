@@ -1,7 +1,7 @@
 import re
 
 
-basic_elements = r"(?P<comment>^#(\s+))?"\
+basic_elements = r"(?P<comment>^#(\s*))?"\
               "(?P<binary_src>(deb|deb-src){1})(\s+)"\
               "(?P<http_s>(http://|https://))"\
               "(?P<URL>(?<=(://))(\S*))"\
@@ -46,4 +46,4 @@ def line_parse(line):
     else:
         https = False
 
-    return(commented, binary, https, str(URL), str(branch), main, contrib, free, ftp)
+    return(commented, binary, https, str(URL), str(branch), main, contrib, free, ftp, line.rstrip())
