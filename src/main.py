@@ -29,56 +29,53 @@ class CellRenderWindow(Gtk.Window):
 
         self.set_default_size(400, 400)
 
-        self.liststore = Gtk.ListStore(bool, bool, bool, str, str, bool, bool, bool, bool)
+        self.liststore = Gtk.ListStore(bool, bool, bool, str, str, bool, bool, bool, bool, str)
         for item in datas:
             self.liststore.append([*item])
 
         treeview = Gtk.TreeView(model=self.liststore)
 
-        rndr_text = Gtk.CellRendererText()  # render text
+        rndr_text = Gtk.CellRendererText()  # render text [not editable]
 
-        rndr_editabletext = Gtk.CellRendererText()  # editable text renderer
-        rndr_editabletext.set_property("editable", True)
+        rndr_URL = Gtk.CellRendererText()  # editable text render URL
+        rndr_URL.set_property("editable", True)
+        rndr_URL.connect("edited", self.URL_edited)
+
+        rndr_BRANCH = Gtk.CellRendererText()  # editable text render BRANCH
+        rndr_BRANCH.set_property("editable", True)
+        rndr_BRANCH.connect("edited", self.BRANCH_edited)
 
         rndr_toggle = Gtk.CellRendererToggle()
         rndr_toggle.connect("toggled", self.on_cell_toggled)
 
-# BOOL comment state
-        column_comment = Gtk.TreeViewColumn("Commented", rndr_toggle, active=1)
-        treeview.append_column(column_comment)
-# BOOL binary/src repo
-        column_binary = Gtk.TreeViewColumn("Binary", rndr_toggle, active=1)
-        treeview.append_column(column_binary)
-# BOOL http/https protocol
-        column_https = Gtk.TreeViewColumn("HTTP", rndr_toggle, active=1)
-        treeview.append_column(column_https)
-# STR url
-        column_domain = Gtk.TreeViewColumn("URL", rndr_editabletext, text=1)
-        treeview.append_column(column_domain)
-# STR release branch (jessie, stable, testing..)
-        column_branch = Gtk.TreeViewColumn("Branch", rndr_editabletext, text=1)
-        treeview.append_column(column_branch)
-# BOOL main/not main
-        column_main = Gtk.TreeViewColumn("Main", rndr_toggle, active=1)
-        treeview.append_column(column_main)
-# BOOL contrib/not contrib
-        column_contrib = Gtk.TreeViewColumn("Contrib", rndr_toggle, active=1)
-        treeview.append_column(column_contrib)
-# BOOL free/non-free
-        column_free = Gtk.TreeViewColumn("Free", rndr_toggle, active=1)
-        treeview.append_column(column_free)
-# BOOl ftp/not ftp in URL
-        column_ftp = Gtk. TreeViewColumn("FTP", rndr_toggle, active=0)
 
-        rndr_editabletext.connect("edited", self.text_edited)
+        columns = [
+            Gtk.TreeViewColumn("Commented", rndr_toggle, active=0),  # BOOL comment state
+            Gtk.TreeViewColumn("Binary", rndr_toggle, active=1),  # BOOL binary/src repo
+            Gtk.TreeViewColumn("HTTPS", rndr_toggle, active=2),  # BOOL http/https protocol
+            Gtk.TreeViewColumn("URL", rndr_URL, text=3),  # STR url
+            Gtk.TreeViewColumn("Branch", rndr_BRANCH, text=4),  # STR release branch (jessie, stable, testing..)
+            Gtk.TreeViewColumn("Main", rndr_toggle, active=5),  # BOOL main/not main
+            Gtk.TreeViewColumn("Contrib", rndr_toggle, active=6),  # BOOL contrib/not contrib
+            Gtk.TreeViewColumn("Free", rndr_toggle, active=7),  # BOOL free/non-free
+            Gtk.TreeViewColumn("FTP", rndr_toggle, active=8),  # BOOl ftp/not ftp in URL
+            Gtk.TreeViewColumn("Line", rndr_text, text=9)  # STR full line
+        ]
+
+        for item in columns:
+            treeview.append_column(item)
 
         self.add(treeview)
 
-    def text_edited(self, widget, path, text):
-        self.liststore[path][1] = text
+        print(treeview.widget)
+
+    def URL_edited(self, widget, path, URL):
+        self.liststore[path][3] = URL
+    def BRANCH_edited(self, widget, path, BRANCH):
+        self.liststore[path][4] = BRANCH
 
     def on_cell_toggled(self, widget, path):
-        self.liststore[path][1] = not self.liststore[path][1]
+        self.liststore[path][0] = not self.liststore[path][0]
 
 
 win = CellRenderWindow()
