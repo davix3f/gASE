@@ -7,10 +7,16 @@
 
 Clone the repo: `git clone https://github.com/davix3f/gtk-apt-sources-editor && git checkout dev`, then make your choice.
 
-**Option one: execute from the source code**
+**Option one: automated installation**
+
+Download **install.py** from *master/* and run it with `sudo python3 install.py`
+All-in-one terminal command: `wget https://raw.githubusercontent.com/davix3f/gASE/master/install.py && sudo python3 install.py`
+If you want, you can keep this install script. It will be updated with "update" functionality.
+
+**Option two: execute from the source code**
 
 In dev/src folder: `python3 main.py`
 
-**Option two: build binary package**
+**Option three: build binary package**
 
 Wondering how? Here's the [guide](https://github.com/davix3f/gtk-apt-sources-editor/blob/dev/src/C_SRC/BUILD_GUIDE.md)
