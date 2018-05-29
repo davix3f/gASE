@@ -87,10 +87,13 @@ try:
             print("Folder /opt/gase already existing")
         if os.path.isdir("/opt/gase/bin") is not True:
             os.makedirs("/opt/gase/bin")
+        if os.path.isdir("/opt/gase/var") is not True:
+            os.makedirs("/opt/gase/var")
 
         # copy compiled file in opt/gase
         copy("gase", "/opt/gase/bin")
         copy("line_analysis.py", "/opt/gase/bin")
+        copy("content/icon.png", "opt/gase/var")
         if os.path.isfile("/opt/gase/bin/gase") is True and os.path.isfile("/opt/gase/bin/line_analysis.py") is True:
             print("Files successfully copied to opt folder")
         else:
@@ -100,8 +103,15 @@ try:
         with open("/usr/bin/gase", "w") as start_script:
             print("Writing the launch file")
             start_script.write("#!/bin/bash\ncd /opt/gase/bin\n./gase")
+        start_script.close()
 
         shell("chmod a+x /usr/bin/gase")
+
+        desktop_file_options = ["[Desktop Entry]", "Name=gASE", "Exec=gASE", "StartupNotify=True", "Terminal=false", "Type=Application","/opt/gase/var/icon.png"]
+        with open ("/usr/share/applications/gASE.desktop","w") as desktop_file:
+            for item in desktop_file_options:
+                desktop_file.write(item+"\n")
+        desktop_file.close()
 
         print("Emptying repo from tmp")
         print("Finished. You can now launch gASE typing \'gase\' in the terminal. Enjoy!")
