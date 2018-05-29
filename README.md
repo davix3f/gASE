@@ -7,7 +7,7 @@
 
 Clone the repo: `git clone https://github.com/davix3f/gtk-apt-sources-editor && git checkout dev`, then make your choice.
 
-**Option one: execute the source**
+**Option one: execute from the source code**
 
 In dev/src folder: `python3 main.py`
 
