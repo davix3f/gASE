@@ -1,6 +1,6 @@
-# gtk-apt-sources-editor
-GTK3+ tool to manage your apt sources.list
-
+<h1 align="center"> gASE </h1>
+Or, GTK3+ APT SOURCES EDITOR
+A graphical tool to manage /etc/apt/sources.list
 ## How to
 
 Clone the repo: `git clone https://github.com/davix3f/gtk-apt-sources-editor`
