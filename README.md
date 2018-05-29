@@ -1,7 +1,7 @@
 <h1 align="center"> gASE </h1>
 <p align="center">
     GTK3+ APT SOURCES EDITOR<br>
-    ![super cow powers](https://raw.githubusercontent.com/davix3f/gASE/dev/src/content/icon.png)
+    ![super cow powers](https://github.com/davix3f/gASE/raw/dev/src/content/icon.png)
     A graphical tool to manage /etc/apt/sources.list
 </p>
 <h2 align="center"> How to use </h2>
