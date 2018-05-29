@@ -1,9 +1,8 @@
 <h1 align="center"> gASE </h1>
-<p align="center">
-    GTK3+ APT SOURCES EDITOR<br>
-    ![super cow powers](https://github.com/davix3f/gASE/raw/dev/src/content/icon.png)
-    A graphical tool to manage /etc/apt/sources.list
-</p>
+<p align="center"> GTK3+ APT SOURCES EDITOR<br> </p>
+<img src="https://github.com/davix3f/gASE/raw/dev/src/content/icon.png" alt="Super cow powers">
+<p align=center"> A graphical tool to manage /etc/apt/sources.list </p>
+
 <h2 align="center"> How to use </h2>
 
 Clone the repo: `git clone https://github.com/davix3f/gtk-apt-sources-editor && git checkout dev`, then make your choice.
