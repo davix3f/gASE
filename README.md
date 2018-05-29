@@ -1,7 +1,7 @@
 <h1 align="center"> gASE </h1>
 <p align="center"> GTK3+ APT SOURCES EDITOR<br> </p>
 <p align="center">
-  <img src="https://github.com/davix3f/gASE/raw/dev/src/content/icon.svg" alt="Super cow powers" width="25%" heigth="25%">
+  <img src="https://github.com/davix3f/gASE/raw/dev/src/content/icon.png" alt="Super cow powers" width="25%" heigth="25%">
 </p>
 <p align="center"> A graphical tool to manage /etc/apt/sources.list </p>
 
