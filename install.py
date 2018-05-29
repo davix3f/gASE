@@ -104,8 +104,10 @@ try:
         print("Emptying repo from tmp")
         print("Finished. Enjoy")
 except:
+        error_occurred = True
         print("Deleting temporary folder")
         shell("rm -rf /tmp/gASE")
 finally:
-        print("Deleting temporary folder")
-        shell("rm -rf /tmp/gASE")
+        if not error_occured:
+                print("Deleting temporary folder")
+                shell("rm -rf /tmp/gASE")
