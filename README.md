@@ -1,7 +1,7 @@
 <h1 align="center"> gASE </h1>
 Or, GTK3+ APT SOURCES EDITOR
 A graphical tool to manage /etc/apt/sources.list
-## How to
+<h2 align="center"> How to </h2>
 
 Clone the repo: `git clone https://github.com/davix3f/gtk-apt-sources-editor`
 
