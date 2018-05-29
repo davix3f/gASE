@@ -1,5 +1,13 @@
-# How to compile for binary package
+# Requirements
+**System packages:** [sudo apt install <package name>]
+* `python-dev` or `python3-dev`, depending on what Python version you want to use. The application is written on Python3, so python3-dev is recommended.
 
+**Python packages:** [sudo pip install <package name>]
+* `gi`
+
+## How to compile for binary package
+This guide is for Python3. If you want to build the binary on Python2.7, change all of the "python3.5m" with "python2.7" or whatever version you have.
+You can have a full list of Python versions you have installed with the command `ls /usr/include | grep python`
 
 1. Copy `main.py` (or its content) as a **.pyx** file, and the other .py files with no changes. They have to be in the same folder with the .pyx file.
 2. Using **cython** (install it with `sudo pip install cython`):
