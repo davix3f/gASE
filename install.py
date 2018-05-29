@@ -48,6 +48,7 @@ try:
                         while selected not in [str(item) for item in range(0, len(p_versions))] + ["QUIT"]:
                             selected = input("User input")
                         if selected == "QUIT":
+                            error_occured = True
                             exit()
                         selected = int(selected)
 
