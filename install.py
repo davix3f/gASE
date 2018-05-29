@@ -37,6 +37,7 @@ try:
                         for item in listdir("/usr/include"):
                             if "python" in item:
                                 p_versions.append(item)
+                        p_versions.sort()
 
                         print("Select the Python version you want for compiling. These have been found in /usr/include:")
                         for key, value in enumerate(p_versions):
@@ -52,7 +53,7 @@ try:
                             exit()
                         selected = int(selected)
 
-                        if selected in range(0, len(p_versions)+1):
+                        if selected in range(0, len(p_versions)):
                             if selected >= key:
                                 py_version = p_versions[int(selected)]
                         return(py_version)
@@ -103,12 +104,10 @@ try:
         shell("chmod a+x /usr/bin/gase")
 
         print("Emptying repo from tmp")
-        print("Finished. Enjoy")
+        print("Finished. You can now launch gASE typing \'gase\' in the terminal. Enjoy!")
 except:
-        error_occurred = True
         print("Deleting temporary folder")
         shell("rm -rf /tmp/gASE")
 finally:
-        if not error_occured:
-                print("Deleting temporary folder")
-                shell("rm -rf /tmp/gASE")
+        print("Deleting temporary folder")
+        shell("rm -rf /tmp/gASE")
