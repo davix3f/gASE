@@ -11,7 +11,6 @@ Clone the repo: `git clone https://github.com/davix3f/gtk-apt-sources-editor && 
 
 In dev/src folder: `python3 main.py`
 
-
 **Option two: build binary package**
 
 Wondering how? Here's the [guide](https://github.com/davix3f/gtk-apt-sources-editor/blob/dev/src/C_SRC/BUILD_GUIDE.md)
