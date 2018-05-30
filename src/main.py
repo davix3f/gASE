@@ -29,7 +29,7 @@ class CellRenderWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="APT sources editor")
 
-        self.set_default_size(400, 400)
+        self.set_default_size(800, 500)
 
         self.liststore = Gtk.ListStore(bool,  # commented 0
                                        bool,  # binary 1
@@ -125,7 +125,12 @@ class CellRenderWindow(Gtk.Window):
         for item in columns:
             treeview.append_column(item)
 
-        self.add(treeview)
+        scrolledwin = Gtk.ScrolledWindow()
+        scrolledwin.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        scrolledwin.add(treeview)
+        scrolledwin.set_min_content_height(200)
+
+        self.add(scrolledwin)
 
     def editpreview(self, path):
         if repo_instances[int(path)].edited != repo_instances[int(path)].line:
