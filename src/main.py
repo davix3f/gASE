@@ -2,6 +2,7 @@ import gi
 import re
 
 import line_analysis
+from gASErepo import Repo
 line_parse = line_analysis.line_parse
 
 gi.require_version("Gtk", "3.0")
@@ -9,16 +10,17 @@ from gi.repository import Gtk
 
 lines = []
 datas = []
-
+repo_instances = []
 
 with open("/etc/apt/sources.list", "r") as srcs_file:
     for line in srcs_file:
-        if line is not "" or "\n":
-            lines.append(line)
+        lines.append(line)
+print(len(lines))
 
-for item in lines:
-    if line_parse(item) != False:
-        datas.append(line_parse(item))
+for key, value in enumerate(lines):
+    if line_parse(value) != False:
+        datas.append(line_parse(value))
+        repo_instances.append(Repo(*line_parse(value), key))
 
 
 
@@ -29,15 +31,22 @@ class CellRenderWindow(Gtk.Window):
 
         self.set_default_size(400, 400)
 
-        self.liststore = Gtk.ListStore(bool, bool, bool, str, str, bool, bool, bool, bool, str)
-        for item in datas:
-            self.liststore.append([*item])
+        self.liststore = Gtk.ListStore(bool,  # commented 0
+                                       bool,  # binary 1
+                                       bool,  # https 2
+                                       str,  # url 3
+                                       str,  # branch 4
+                                       bool,  # main 5
+                                       bool,  # free 6
+                                       bool,  # contrib 7
+                                       bool,  # ftp 8
+                                       str,  # line 9
+                                       int,  # line n 10
+                                       str # edited line 11
+                                       )
+        for item in repo_instances:
+            self.liststore.append([*item.returnFullInfo(), ""])
 
-        for k, v in enumerate(self.liststore):
-            print(k, v)
-            for key, value in enumerate(item):
-                print(key, value)
-            print()
 
         treeview = Gtk.TreeView(model=self.liststore)
 
@@ -50,6 +59,8 @@ class CellRenderWindow(Gtk.Window):
         rndr_BRANCH = Gtk.CellRendererText()  # editable text renderer BRANCH
         rndr_BRANCH.set_property("editable", True)
         rndr_BRANCH.connect("edited", self.BRANCH_edited)
+
+        rndr_edit_preview = Gtk.CellRendererText()
 
         toggles = {
             "commented":Gtk.CellRendererToggle(),
@@ -105,44 +116,71 @@ class CellRenderWindow(Gtk.Window):
             # STRINGS
             Gtk.TreeViewColumn("URL", rndr_URL, text=3),  # STR url
             Gtk.TreeViewColumn("Branch", rndr_BRANCH, text=4),  # STR release branch (jessie, stable, testing..)
-            Gtk.TreeViewColumn("Line", rndr_text, text=9)  # STR full line
+            Gtk.TreeViewColumn("Line", rndr_text, text=9),  # STR full line
+            Gtk.TreeViewColumn("Line#", rndr_text, text=10),  # STR(int) LINE#
+            Gtk.TreeViewColumn("Edit result", rndr_edit_preview, text=11)  # STR line edit result
         ]
+
 
         for item in columns:
             treeview.append_column(item)
 
         self.add(treeview)
 
+    def editpreview(self, path):
+        if repo_instances[int(path)].edited != repo_instances[int(path)].line:
+            self.liststore[path][11] = repo_instances[int(path)].edited
 
     def URL_edited(self, widget, path, URL):
+        oldURL = self.liststore[path][3]
         self.liststore[path][3] = URL
+        repo_instances[int(path)].editURL(URL)
+        print("\'"+oldURL+"\' changed to \'"+URL+"\'")
+        self.editpreview(path)
+
 
     def BRANCH_edited(self, widget, path, BRANCH):
         self.liststore[path][4] = BRANCH
+        repo_instances[int(path)].editBranch(BRANCH)
+        self.editpreview(path)
+
+
 
     def comment_toggled(self, widget, path):
         self.liststore[path][0] = not self.liststore[path][0]
+        repo_instances[int(path)].editCommented(self.liststore[path][0])
         print("Comment is now", widget.get_active())
+        self.editpreview(path)
 
     def binary_toggled(self, widget, path):
+        repo_instances[int(path)].editBinary(self.liststore[path][1])
         self.liststore[path][1] = not self.liststore[path][1]
         print("Binary is now", widget.get_active())
+        self.editpreview(path)
 
     def HTTPS_toggled(self, widget, path):
+        repo_instances[int(path)].editHTTPS(self.liststore[path][2])
         self.liststore[path][2] = not self.liststore[path][2]
         print("HTTPS is now", widget.get_active())
+        self.editpreview(path)
 
     def main_toggled(self, widget, path):
+        repo_instances[int(path)].editMain(self.liststore[path][5])
         self.liststore[path][5] = not self.liststore[path][5]
         print("Main is now", widget.get_active())
+        self.editpreview(path)
 
     def contrib_toggled(self, widget, path):
+        repo_instances[int(path)].editContrib(self.liststore[path][6])
         self.liststore[path][6] = not self.liststore[path][6]
         print("Contrib is now", widget.get_active())
+        self.editpreview(path)
 
     def free_toggled(self, widget, path):
+        repo_instances[int(path)].editFree(self.liststore[path][7])
         self.liststore[path][7] = not self.liststore[path][7]
         print("Free is now", widget.get_active())
+        self.editpreview(path)
 
 
 win = CellRenderWindow()
