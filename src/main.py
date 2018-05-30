@@ -140,6 +140,10 @@ class CellRenderWindow(Gtk.Window):
         oldURL = self.liststore[path][3]
         self.liststore[path][3] = URL
         repo_instances[int(path)].editURL(URL)
+        if re.search(r"(http://|https://)?ftp\.", URL):
+            self.liststore[path][8] = True
+        else:
+            self.liststore[path][8] = False
         print("\'"+oldURL+"\' changed to \'"+URL+"\'")
         self.editpreview(path)
 

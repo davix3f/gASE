@@ -1,6 +1,7 @@
 from os import system as shell
 from os import makedirs
 from os import listdir
+from os import getcwd as pwd
 import os.path
 from shutil import copyfile, copy
 from shutil import copytree as copydir
@@ -30,6 +31,7 @@ try:
 
         # compile
         copyfile("main.py", "main.pyx")
+        print(listdir(pwd()))
 
         def choose_python_version():
             def choice():
@@ -60,9 +62,9 @@ try:
             choice_result = choice()
             print("You chose", choice_result)
 
-            confirm = input("Confirm? [y]/[n]")
+            confirm = input("Confirm? [y]/[n] ")
             while confirm not in ["y","n"]:
-                confirm = input("Confirm? [y]/[n]")
+                confirm = input("Confirm? [y]/[n] ")
             if confirm == "y":
                 return(choice_result, "/usr/include/"+choice_result)
             if confirm == "n":
@@ -73,6 +75,8 @@ try:
         shell("cython main.pyx --embed")
 
         command = ("gcc -Os -I {0} -o gase main.c -l{1} -lpthread -lm -util -ldl".format(selected_version[1], selected_version[0]))
+
+        print("Performing compilation. The command is \n%s\n. This may take some time" % command)
         if shell(command) == 0 and os.path.isfile("gase"):
             print("\n--#-- Compilation successful --#--\n")
         else:
@@ -83,41 +87,42 @@ try:
         # create dir in opt
         if os.path.isdir("/opt/gase") is not True:
             os.makedirs("/opt/gase")
-        else:
-            print("Folder /opt/gase already existing")
         if os.path.isdir("/opt/gase/bin") is not True:
             os.makedirs("/opt/gase/bin")
         if os.path.isdir("/opt/gase/var") is not True:
             os.makedirs("/opt/gase/var")
 
-        # copy compiled file in opt/gase
-        copy("gase", "/opt/gase/bin")
-        copy("line_analysis.py", "/opt/gase/bin")
-        copy("content/icon.png", "opt/gase/var")
-        if os.path.isfile("/opt/gase/bin/gase") is True and os.path.isfile("/opt/gase/bin/line_analysis.py") is True:
-            print("Files successfully copied to opt folder")
-        else:
-            print("Files not copied")
-            exit()
+        # copy compiled file in opt/gase + other files
+        copy("gase", "/opt/gase/bin"), print("gase Copied")
+        copy("line_analysis.py", "/opt/gase/bin"), print("lanalysis Copied")
+        copy("gASErepo.py", "/opt/gase/bin"), print("gaserepo Copied")
 
-        with open("/usr/bin/gase", "w") as start_script:
-            print("Writing the launch file")
-            start_script.write("#!/bin/bash\ncd /opt/gase/bin\n./gase")
+        copy("content/icon.png", "/opt/gase/var")
+
+        start_script = open("/usr/bin/gase", "w")
+        print("Writing the launch file")
+        start_script.write("#!/bin/bash\ncd /opt/gase/bin\n./gase")
         start_script.close()
 
         shell("chmod a+x /usr/bin/gase")
 
-        desktop_file_options = ["[Desktop Entry]", "Name=gASE", "Exec=gASE", "StartupNotify=True", "Terminal=false", "Type=Application","/opt/gase/var/icon.png"]
-        with open ("/usr/share/applications/gASE.desktop","w") as desktop_file:
-            for item in desktop_file_options:
-                desktop_file.write(item+"\n")
+        desktop_file_options = ["#!/usr/bin/env xdg-open","[Desktop Entry]",
+                                "Version=1.0","Type=Application",
+                                "Name=gASE", "Exec=gase",
+                                "StartupNotify=True", "Terminal=False",
+                                "Icon=/opt/gase/var/icon.png",
+                                "Comment=Edit /etc/apt/sources.list"]
+
+        desktop_file = open("/usr/share/applications/gASE.desktop","w")
+        for item in desktop_file_options:
+            desktop_file.write(item+"\n")
+        print("Desktop file written")
         desktop_file.close()
 
-        print("Emptying repo from tmp")
         print("Finished. You can now launch gASE typing \'gase\' in the terminal. Enjoy!")
 except:
-        print("Deleting temporary folder")
+        print("error - Deleting temporary folder")
         shell("rm -rf /tmp/gASE")
 finally:
-        print("Deleting temporary folder")
+        print("successful - Deleting temporary folder")
         shell("rm -rf /tmp/gASE")
