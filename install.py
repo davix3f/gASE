@@ -6,7 +6,7 @@ import os.path
 from shutil import copyfile, copy
 from shutil import copytree as copydir
 from getpass import getuser
-
+import re
 
 try:
         cd = os.chdir
@@ -91,9 +91,10 @@ try:
                 makedirs(item)
 
         # copy compiled file in opt/gase + other files
-        copy("gase", "/opt/gase/bin"), print("gase Copied")
-        copy("line_analysis.py", "/opt/gase/bin"), print("lanalysis Copied")
-        copy("gASErepo.py", "/opt/gase/bin"), print("gaserepo Copied")
+        for item in listdir(pwd):
+            if item != "main.py":
+                if re.match(r"(\.py)$", item):
+                    copy(item, "/opt/gase/bin")
 
         copy("content/icon.png", "/opt/gase/var")
 
