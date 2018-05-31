@@ -162,7 +162,7 @@ class CellRenderWindow(Gtk.Window):
 
     def binary_toggled(self, widget, path):
         self.liststore[path][1] = not self.liststore[path][1]
-        repo_instances[int(path)].editHTTPS(self.liststore[path][2])
+        repo_instances[int(path)].editBinary(self.liststore[path][2])
         print("Binary is now", widget.get_active())
         self.editpreview(path)
 
