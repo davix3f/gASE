@@ -71,7 +71,7 @@ try:
                 choose_python_version()
 
         selected_version = choose_python_version()
-
+"""
         shell("cython main.pyx --embed")
 
         command = ("gcc -Os -I {0} -o gase main.c -l{1} -lpthread -lm -util -ldl".format(selected_version[1], selected_version[0]))
@@ -82,7 +82,7 @@ try:
         else:
             print("Some error occurred during compilation. Exiting")
             exit()
-
+"""
 
         # create dir(s) in opt
         dirs = ["/opt/gase/", "/opt/gase/bin", "/opt/gase/var"]
@@ -93,14 +93,14 @@ try:
         # copy compiled file in opt/gase + other files
         for item in listdir(pwd):
             if item != "main.py":
-                if re.match(r"(\.py)$", item):
+                if re.match(r".*(\.py)$", item):
                     copy(item, "/opt/gase/bin")
 
         copy("content/icon.png", "/opt/gase/var")
 
         start_script = open("/usr/bin/gase", "w")
         print("Writing the launch file")
-        start_script.write("#!/bin/bash\ncd /opt/gase/bin\n./gase")
+        start_script.write("#!/bin/bash\ncd /opt/gase/bin\n./{0} main.py".format(selected_version[0]))
         start_script.close()
 
         shell("chmod a+x /usr/bin/gase")
