@@ -6,7 +6,7 @@ import os.path
 from shutil import copyfile, copy
 from shutil import copytree as copydir
 from getpass import getuser
-
+import re
 
 try:
         cd = os.chdir
@@ -62,7 +62,7 @@ try:
             choice_result = choice()
             print("You chose", choice_result)
 
-            confirm = input("Confirm? [y]/[n] ")
+            confirm = input("Confirm? [y]/[n]: ")
             while confirm not in ["y","n"]:
                 confirm = input("Confirm? [y]/[n] ")
             if confirm == "y":
@@ -71,7 +71,7 @@ try:
                 choose_python_version()
 
         selected_version = choose_python_version()
-
+"""
         shell("cython main.pyx --embed")
 
         command = ("gcc -Os -I {0} -o gase main.c -l{1} -lpthread -lm -util -ldl".format(selected_version[1], selected_version[0]))
@@ -82,26 +82,25 @@ try:
         else:
             print("Some error occurred during compilation. Exiting")
             exit()
+"""
 
-
-        # create dir in opt
-        if os.path.isdir("/opt/gase") is not True:
-            os.makedirs("/opt/gase")
-        if os.path.isdir("/opt/gase/bin") is not True:
-            os.makedirs("/opt/gase/bin")
-        if os.path.isdir("/opt/gase/var") is not True:
-            os.makedirs("/opt/gase/var")
+        # create dir(s) in opt
+        dirs = ["/opt/gase/", "/opt/gase/bin", "/opt/gase/var"]
+        for item in dirs:
+            if os.path.isdir(item) is not True:
+                makedirs(item)
 
         # copy compiled file in opt/gase + other files
-        copy("gase", "/opt/gase/bin"), print("gase Copied")
-        copy("line_analysis.py", "/opt/gase/bin"), print("lanalysis Copied")
-        copy("gASErepo.py", "/opt/gase/bin"), print("gaserepo Copied")
+        for item in listdir(pwd):
+            if item != "main.py":
+                if re.match(r".*(\.py)$", item):
+                    copy(item, "/opt/gase/bin")
 
         copy("content/icon.png", "/opt/gase/var")
 
         start_script = open("/usr/bin/gase", "w")
         print("Writing the launch file")
-        start_script.write("#!/bin/bash\ncd /opt/gase/bin\n./gase")
+        start_script.write("#!/bin/bash\ncd /opt/gase/bin\n./{0} main.py".format(selected_version[0]))
         start_script.close()
 
         shell("chmod a+x /usr/bin/gase")
