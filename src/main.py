@@ -161,32 +161,32 @@ class CellRenderWindow(Gtk.Window):
         self.editpreview(path)
 
     def binary_toggled(self, widget, path):
-        repo_instances[int(path)].editBinary(self.liststore[path][1])
         self.liststore[path][1] = not self.liststore[path][1]
+        repo_instances[int(path)].editHTTPS(self.liststore[path][2])
         print("Binary is now", widget.get_active())
         self.editpreview(path)
 
     def HTTPS_toggled(self, widget, path):
-        repo_instances[int(path)].editHTTPS(self.liststore[path][2])
         self.liststore[path][2] = not self.liststore[path][2]
+        repo_instances[int(path)].editHTTPS(self.liststore[path][2])
         print("HTTPS is now", widget.get_active())
         self.editpreview(path)
 
     def main_toggled(self, widget, path):
-        repo_instances[int(path)].editMain(self.liststore[path][5])
         self.liststore[path][5] = not self.liststore[path][5]
+        repo_instances[int(path)].editMain(self.liststore[path][5])
         print("Main is now", widget.get_active())
         self.editpreview(path)
 
     def contrib_toggled(self, widget, path):
-        repo_instances[int(path)].editContrib(self.liststore[path][6])
         self.liststore[path][6] = not self.liststore[path][6]
+        repo_instances[int(path)].editContrib(self.liststore[path][6])
         print("Contrib is now", widget.get_active())
         self.editpreview(path)
 
     def free_toggled(self, widget, path):
-        repo_instances[int(path)].editFree(self.liststore[path][7])
         self.liststore[path][7] = not self.liststore[path][7]
+        repo_instances[int(path)].editFree(self.liststore[path][7])
         print("Free is now", widget.get_active())
         self.editpreview(path)
 
