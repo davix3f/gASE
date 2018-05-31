@@ -21,4 +21,4 @@ In dev/src folder: `python3 main.py`
 
 **Option three: build binary package**
 
-Wondering how? Here's the [guide](https://github.com/davix3f/gtk-apt-sources-editor/blob/dev/src/C_SRC/BUILD_GUIDE.md)
+Wondering how? Here's the [guide](https://github.com/davix3f/gtk-apt-sources-editor/blob/dev/src/BUILD_GUIDE.md)
