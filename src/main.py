@@ -190,8 +190,8 @@ class CellRenderWindow(Gtk.Window):
         print("Free is now", widget.get_active())
         self.editpreview(path)
 
-    self.connect("delete-event", Gtk.main_quit)
 
 win = CellRenderWindow()
+win.connect("delete-event", Gtk.main_quit)
 win.show_all()
 Gtk.main()
