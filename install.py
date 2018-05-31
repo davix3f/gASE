@@ -62,7 +62,7 @@ try:
             choice_result = choice()
             print("You chose", choice_result)
 
-            confirm = input("Confirm? [y]/[n] ")
+            confirm = input("Confirm? [y]/[n]: ")
             while confirm not in ["y","n"]:
                 confirm = input("Confirm? [y]/[n] ")
             if confirm == "y":
@@ -84,13 +84,11 @@ try:
             exit()
 
 
-        # create dir in opt
-        if os.path.isdir("/opt/gase") is not True:
-            os.makedirs("/opt/gase")
-        if os.path.isdir("/opt/gase/bin") is not True:
-            os.makedirs("/opt/gase/bin")
-        if os.path.isdir("/opt/gase/var") is not True:
-            os.makedirs("/opt/gase/var")
+        # create dir(s) in opt
+        dirs = ["/opt/gase/", "/opt/gase/bin", "/opt/gase/var"]
+        for item in dirs:
+            if os.path.isdir(item) is not True:
+                makedirs(item)
 
         # copy compiled file in opt/gase + other files
         copy("gase", "/opt/gase/bin"), print("gase Copied")
