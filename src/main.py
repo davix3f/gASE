@@ -42,15 +42,15 @@ class CellRenderWindow(Gtk.Window):
                                        bool,  # ftp 8
                                        str,  # line 9
                                        int,  # line n 10
-                                       str # edited line 11
+                                       str # edited line preview 11
                                        )
         for item in repo_instances:
-            self.liststore.append([*item.returnFullInfo(), ""])
+            self.liststore.append([*item.returnFullInfo(), "Not edited"])
 
 
         treeview = Gtk.TreeView(model=self.liststore)
 
-        rndr_text = Gtk.CellRendererText()  # renderer text [not editable]
+        rndr_text = Gtk.CellRendererText()  # renderer text [not drectly editable]
 
         rndr_URL = Gtk.CellRendererText()  # editable text renderer URL
         rndr_URL.set_property("editable", True)
@@ -144,7 +144,7 @@ class CellRenderWindow(Gtk.Window):
             self.liststore[path][8] = True
         else:
             self.liststore[path][8] = False
-        print("\'"+oldURL+"\' changed to \'"+URL+"\'")
+        print("\'" + oldURL + "\' changed to \'" + URL + "\'")
         self.editpreview(path)
 
 
@@ -152,7 +152,6 @@ class CellRenderWindow(Gtk.Window):
         self.liststore[path][4] = BRANCH
         repo_instances[int(path)].editBranch(BRANCH)
         self.editpreview(path)
-
 
 
     def comment_toggled(self, widget, path):
@@ -191,8 +190,8 @@ class CellRenderWindow(Gtk.Window):
         print("Free is now", widget.get_active())
         self.editpreview(path)
 
+    self.connect("delete-event", Gtk.main_quit)
 
 win = CellRenderWindow()
-win.connect("delete-event", Gtk.main_quit)
 win.show_all()
 Gtk.main()
