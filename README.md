@@ -14,5 +14,5 @@ Clone the repo:<br>
 **Option two:**
 In src folder: `python3 main.py`
 
-**Option three: [BUG IN C COMPILATION]**
+**Option three:**
 [Instructions for binary build](https://github.com/davix3f/gASE/blob/dev/src/C_SRC/BUILD_GUIDE.md)
