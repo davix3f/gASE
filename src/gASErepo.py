@@ -21,7 +21,7 @@ class Repo:
     def buildEdited(self):
         elements = ["#" if self.commented is True else "",
                     "deb" if self.binary is True else "deb-src",
-                    self.URL,
+                    ("https://" if self.https is True else "http://") + self.URL,
                     self.branch,
                     "main" if self.main is True else "",
                     "non-free" if self.free is False else "",
