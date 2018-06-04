@@ -19,6 +19,6 @@ If you want, you can keep this install script. It will be updated with "update" 
 
 In dev/src folder: `python3 main.py`
 
-**Option three: build binary package [BROKEN - DON'T]**
+**Option three: build binary package**
 
 Wondering how? Here's the [guide](https://github.com/davix3f/gtk-apt-sources-editor/blob/dev/src/BUILD_GUIDE.md)
