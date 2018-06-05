@@ -1,8 +1,9 @@
+import line_analysis
+
 class Repo:
-    def __init__(self, commented, binary, https, URL, branch, main, contrib, free, ftp, line, linenum):
+    def __init__(self, commented, binary, URL, branch, main, contrib, free, ftp, line, linenum=None):
         self.commented = commented
         self.binary = binary
-        self.https = https
         self.URL = URL
         self.branch = branch
         self.main = main
@@ -14,14 +15,14 @@ class Repo:
     edited = ""
 
     def returnFullInfo(self):
-        return(self.commented, self.binary, self.https, self.URL,\
+        return(self.commented, self.binary, self.URL,\
                self.branch,self.main, self.contrib, self.free,\
                self.ftp, self.line, self.linenum)
 
     def buildEdited(self):
         elements = ["#" if self.commented is True else "",
                     "deb" if self.binary is True else "deb-src",
-                    ("https://" if self.https is True else "http://") + self.URL,
+                    self.URL,
                     self.branch,
                     "main" if self.main is True else "",
                     "non-free" if self.free is False else "",
@@ -44,11 +45,6 @@ class Repo:
     def editBinary(self, replacement):
         if self.binary is not replacement:
             self.binary = replacement
-            self.buildEdited()
-
-    def editHTTPS(self, replacement):
-        if self.https is not replacement:
-            self.https = replacement
             self.buildEdited()
 
     def editURL(self, replacement):
@@ -75,3 +71,22 @@ class Repo:
         if self.free is not replacement:
             self.free = replacement
             self.buildEdited()
+
+    @classmethod
+    def widget_builder(cls, commented, binary, main, free, contrib, URL, BRANCH):
+        final_line = ""
+        elements = ["#" if commented is True else "",
+                    "deb" if binary is True else "deb-src",
+                    URL,
+                    BRANCH,
+                    "main" if main is True else "",
+                    "non-free" if free is False else "",
+                    "contrib" if contrib is True else ""]
+        for item in elements:
+            if item != "":
+                if elements.index(item) != len(elements)-1:
+                    final_line += (item+" ")
+                else:
+                    final_line += item
+        print(final_line)
+        return(cls(*line_analysis.line_parse(final_line), None))
