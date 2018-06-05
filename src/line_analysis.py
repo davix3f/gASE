@@ -1,10 +1,9 @@
 import re
 
-
+#"(?P<URL>((?<=(://))?(\S*)))"\
 basic_elements = r"(?P<comment>^#(\s*))?"\
               "(?P<binary_src>(deb|deb-src){1})(\s+)"\
-              "(?P<http_s>(http://|https://))"\
-              "(?P<URL>(?<=(://))(\S*))"\
+              "(?P<URL>((http://|https://)?(\S*)))"\
               "\s+"\
               "(?P<branch>(\S+))"\
 
@@ -13,7 +12,7 @@ def line_parse(line):
     if type(line) is not str:
         raise TypeError("argument not <str>")
     try:
-        comment, binary_src, https, URL, branch = re.search(basic_elements, line).group("comment", "binary_src", "http_s", "URL", "branch")
+        comment, binary_src, URL, branch = re.search(basic_elements, line).group("comment", "binary_src", "URL", "branch")
     except:
         return False
 
@@ -41,9 +40,9 @@ def line_parse(line):
         binary = False
     if binary_src == "deb":
         binary = True
-    if "https" in https:
-        https = True
-    else:
-        https = False
 
-    return(commented, binary, https, str(URL), str(branch), main, contrib, free, ftp, line.rstrip())
+    if re.search(r"cdrom:", line):
+        #URL = re.search(r"(?<=(cdrom:)).*]/?", line).group()
+        URL = re.search(r"cdrom:.*]/?", line).group()
+
+    return(commented, binary, str(URL), str(branch), main, contrib, free, ftp, line.rstrip())
