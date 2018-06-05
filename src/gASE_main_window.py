@@ -1,9 +1,12 @@
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
+import re
 
 import gASE_rewrite
 import gASEdialog
+import gASEutils
+import gASErepo
 
 class MainWindow(Gtk.Window):
 
@@ -19,16 +22,15 @@ class MainWindow(Gtk.Window):
 
         self.liststore = Gtk.ListStore(bool,  # commented 0
                                        bool,  # binary 1
-                                       bool,  # https 2
-                                       str,  # url 3
-                                       str,  # branch 4
-                                       bool,  # main 5
-                                       bool,  # free 6
-                                       bool,  # contrib 7
-                                       bool,  # ftp 8
-                                       str,  # line 9
-                                       int,  # line n 10
-                                       str # edited line preview 11
+                                       str,  # url 2
+                                       str,  # branch 3
+                                       bool,  # main 4
+                                       bool,  # free 5
+                                       bool,  # contrib 6
+                                       bool,  # ftp 7
+                                       str,  # line 8
+                                       int,  # line n 9
+                                       str # edited line preview 10
                                        )
         for item in self.repo_instances:
             self.liststore.append([*item.returnFullInfo(), "Not edited"])
@@ -53,7 +55,6 @@ class MainWindow(Gtk.Window):
         toggles = {
             "commented":Gtk.CellRendererToggle(),
             "binary":Gtk.CellRendererToggle(),
-            "HTTPS":Gtk.CellRendererToggle(),
             "main":Gtk.CellRendererToggle(),
             "contrib":Gtk.CellRendererToggle(),
             "free":Gtk.CellRendererToggle(),
@@ -64,21 +65,11 @@ class MainWindow(Gtk.Window):
         }
         toggles_kw_list = [*toggles]
 
-        def list_epure(target_list, *args):
-            try:
-                for item in args:
-                    target_list.remove(item)
-                    print("Removed \'%s\'" % item)
-                return(True)
-            except:
-                return(False)
-
-        list_epure(toggles_kw_list, "ftp")
+        gASEutils.list_epure(toggles_kw_list, "ftp")
 
         toggles_functions = {
             "commented":("toggled", self.comment_toggled),
             "binary":("toggled", self.binary_toggled),
-            "HTTPS":("toggled", self.HTTPS_toggled),
             "main":("toggled", self.main_toggled),
             "contrib":("toggled", self.contrib_toggled),
             "free":("toggled", self.free_toggled),
@@ -87,36 +78,25 @@ class MainWindow(Gtk.Window):
             "add_repo":("clicked", self.add_repo)
         }
 
-        def connect_toggles(toggles_list, toggles_dictionary, functions_dictionary):
-            if len(toggles_list) != len(functions_dictionary):
-                print("The length of the argument \'toggles_list\' is", len(toggles_list),\
-                      "while the length of the \'functions_dictionary\' argument is", len(functions_dictionary))
-                return(False)
-            index = 0
-            while index < len(toggles_list):
-                #print(toggles_dictionary[toggles_list[index]], functions_dictionary[toggles_list[index]])
-                toggles_dictionary[toggles_list[index]].connect(functions_dictionary[toggles_list[index]][0],\
-                                                                functions_dictionary[toggles_list[index]][1])
-                index += 1
 
-        if connect_toggles(toggles_kw_list, toggles, toggles_functions) is False:
+
+        if gASEutils.connect_toggles(toggles_kw_list, toggles, toggles_functions) is False:
             quit()
 
         columns = [
             # BOOLS
             Gtk.TreeViewColumn("Commented", toggles["commented"], active=0),  # BOOL '^#' state
             Gtk.TreeViewColumn("Binary", toggles["binary"], active=1),  # BOOL binary/src repo
-            Gtk.TreeViewColumn("HTTPS", toggles["HTTPS"], active=2),  # BOOL http/https protocol
-            Gtk.TreeViewColumn("Main", toggles["main"], active=5),  # BOOL main/not main
-            Gtk.TreeViewColumn("Contrib", toggles["contrib"], active=6),  # BOOL contrib/not contrib
-            Gtk.TreeViewColumn("Free", toggles["free"], active=7),  # BOOL free/non-free
-            Gtk.TreeViewColumn("FTP", toggles["ftp"], active=8),  # BOOl ftp/not ftp in URL
+            Gtk.TreeViewColumn("Main", toggles["main"], active=4),  # BOOL main/not main
+            Gtk.TreeViewColumn("Contrib", toggles["contrib"], active=5),  # BOOL contrib/not contrib
+            Gtk.TreeViewColumn("Free", toggles["free"], active=6),  # BOOL free/non-free
+            Gtk.TreeViewColumn("FTP", toggles["ftp"], active=7),  # BOOl ftp/not ftp in URL
             # STRINGS
-            Gtk.TreeViewColumn("URL", rndr_URL, text=3),  # STR url
-            Gtk.TreeViewColumn("Branch", rndr_BRANCH, text=4),  # STR release branch (jessie, stable, testing..)
-            Gtk.TreeViewColumn("Line", rndr_text, text=9),  # STR full line
-            Gtk.TreeViewColumn("Line#", rndr_text, text=10),  # STR(int) LINE#
-            Gtk.TreeViewColumn("Edit result", rndr_edit_preview, text=11)  # STR line edit result
+            Gtk.TreeViewColumn("URL", rndr_URL, text=2),  # STR url
+            Gtk.TreeViewColumn("Branch", rndr_BRANCH, text=3),  # STR release branch (jessie, stable, testing..)
+            Gtk.TreeViewColumn("Line", rndr_text, text=8),  # STR full line
+            Gtk.TreeViewColumn("Line#", rndr_text, text=9),  # STR(int) LINE#
+            Gtk.TreeViewColumn("Edit result", rndr_edit_preview, text=10)  # STR line edit result
         ]
 
 
@@ -203,10 +183,21 @@ class MainWindow(Gtk.Window):
         print("Repo removed")
 
     def add_repo(self, widget):
-        print("Added repo")
+        repo_dialog = gASEdialog.AddRepoDialog(self)
+        response = repo_dialog.run()
+        if response == Gtk.ResponseType.OK:
+            if repo_dialog.build() is not False:
+                self.repo_instances.append(gASErepo.Repo.widget_builder(*repo_dialog.build()))
+                self.repo_instances[-1].linenum = len(self.lines)
+                self.liststore.append([*self.repo_instances[-1].returnFullInfo(), "Not edited"])
+                print("Repo added")
+                repo_dialog.destroy()
+        else:
+            repo_dialog.destroy()
+
 
     def show_dialog(self, message):
-        active_dialog = gASEdialog.GeneralDialog(self, message)
+        active_dialog = gASEdialog.GeneralDialog(self, "Message dialog", message)
         dialog_response = active_dialog.run()
 
         if dialog_response == Gtk.ResponseType.OK:
