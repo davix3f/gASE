@@ -25,4 +25,8 @@ for key, value in enumerate(lines):
 
 
 MainWindow(lines, datas, repo_instances).show_all()
+print("Starting main window using Gtk",\
+      str(Gtk.get_major_version()) +"."+\
+      str(Gtk.get_minor_version()) +"."+\
+      str(Gtk.get_micro_version()))
 Gtk.main()
