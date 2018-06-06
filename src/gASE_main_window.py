@@ -25,15 +25,27 @@ class MainWindow(Gtk.Window):
                                        str,  # url 2
                                        str,  # branch 3
                                        bool,  # main 4
-                                       bool,  # free 5
-                                       bool,  # contrib 6
+                                       bool,  # contrib 5
+                                       bool,  # free 6
                                        bool,  # ftp 7
                                        str,  # line 8
                                        int,  # line n 9
                                        str # edited line preview 10
                                        )
+        [self.commented_index,
+         self.binary_index,
+         self.url_index,
+         self.branch_index,
+         self.main_index,
+         self.contrib_index,
+         self.free_index,
+         self.ftp_index,
+         self.line_index,
+         self.linen_index,
+         self.edited_index] = list(range(0, self.liststore.get_n_columns()))
+
         for item in self.repo_instances:
-            self.liststore.append([*item.returnFullInfo(), "Not edited"])
+            self.liststore.append([*item.returnFullInfo(), None])
 
 
         treeview = Gtk.TreeView(model=self.liststore)
@@ -78,25 +90,23 @@ class MainWindow(Gtk.Window):
             "add_repo":("clicked", self.add_repo)
         }
 
-
-
         if gASEutils.connect_toggles(toggles_kw_list, toggles, toggles_functions) is False:
             quit()
 
         columns = [
             # BOOLS
-            Gtk.TreeViewColumn("Commented", toggles["commented"], active=0),  # BOOL '^#' state
-            Gtk.TreeViewColumn("Binary", toggles["binary"], active=1),  # BOOL binary/src repo
-            Gtk.TreeViewColumn("Main", toggles["main"], active=4),  # BOOL main/not main
-            Gtk.TreeViewColumn("Contrib", toggles["contrib"], active=5),  # BOOL contrib/not contrib
-            Gtk.TreeViewColumn("Free", toggles["free"], active=6),  # BOOL free/non-free
-            Gtk.TreeViewColumn("FTP", toggles["ftp"], active=7),  # BOOl ftp/not ftp in URL
+            Gtk.TreeViewColumn("Commented", toggles["commented"], active=self.commented_index),  # BOOL '^#' state
+            Gtk.TreeViewColumn("Binary", toggles["binary"], active=self.binary_index),  # BOOL binary/src repo
+            Gtk.TreeViewColumn("Main", toggles["main"], active=self.main_index),  # BOOL main/not main
+            Gtk.TreeViewColumn("Contrib", toggles["contrib"], active=self.contrib_index),  # BOOL contrib/not contrib
+            Gtk.TreeViewColumn("Free", toggles["free"], active=self.free_index),  # BOOL free/non-free
+            Gtk.TreeViewColumn("FTP", toggles["ftp"], active=self.ftp_index),  # BOOl ftp/not ftp in URL
             # STRINGS
-            Gtk.TreeViewColumn("URL", rndr_URL, text=2),  # STR url
-            Gtk.TreeViewColumn("Branch", rndr_BRANCH, text=3),  # STR release branch (jessie, stable, testing..)
-            Gtk.TreeViewColumn("Line", rndr_text, text=8),  # STR full line
-            Gtk.TreeViewColumn("Line#", rndr_text, text=9),  # STR(int) LINE#
-            Gtk.TreeViewColumn("Edit result", rndr_edit_preview, text=10)  # STR line edit result
+            Gtk.TreeViewColumn("URL", rndr_URL, text=self.url_index),  # STR url
+            Gtk.TreeViewColumn("Branch", rndr_BRANCH, text=self.branch_index),  # STR release branch (jessie, stable, testing..)
+            #Gtk.TreeViewColumn("Line", rndr_text, text=self.line_index),  # STR full line
+            Gtk.TreeViewColumn("Line#", rndr_text, text=self.linen_index),  # STR(int) LINE#
+            Gtk.TreeViewColumn("Edit result", rndr_edit_preview, text=self.edited_index)  # STR line edit result
         ]
 
 
@@ -117,62 +127,57 @@ class MainWindow(Gtk.Window):
 
         self.add(vbox)
 
+
     def editpreview(self, path):
         if self.repo_instances[int(path)].edited != self.repo_instances[int(path)].line:
-            self.liststore[path][11] = self.repo_instances[int(path)].edited
+            self.liststore[path][self.edited_index] = self.repo_instances[int(path)].edited
 
     def URL_edited(self, widget, path, URL):
-        oldURL = self.liststore[path][3]
-        self.liststore[path][3] = URL
+        oldURL = self.liststore[path][self.url_index]
+        self.liststore[path][self.url_index] = URL
         self.repo_instances[int(path)].editURL(URL)
         if re.search(r"(http://|https://)?ftp\.", URL):
-            self.liststore[path][8] = True
+            self.liststore[path][self.ftp_index] = True
         else:
-            self.liststore[path][8] = False
+            self.liststore[path][self.ftp_index] = False
         print("\'" + oldURL + "\' changed to \'" + URL + "\'")
         self.editpreview(path)
 
-
     def BRANCH_edited(self, widget, path, BRANCH):
-        self.liststore[path][4] = BRANCH
+        self.liststore[path][self.branch_index] = BRANCH
         self.repo_instances[int(path)].editBranch(BRANCH)
         self.editpreview(path)
 
-
     def comment_toggled(self, widget, path):
-        self.liststore[path][0] = not self.liststore[path][0]
-        self.repo_instances[int(path)].editCommented(self.liststore[path][0])
-        print("Comment is now", self.liststore[path][0])
+        self.liststore[path][self.commented_index] = not self.liststore[path][self.commented_index]
+        self.repo_instances[int(path)].editCommented(self.liststore[path][self.commented_index])
+        print("Comment is now", self.liststore[path][self.commented_index])
         self.editpreview(path)
 
     def binary_toggled(self, widget, path):
-        self.liststore[path][1] = not self.liststore[path][1]
-        self.repo_instances[int(path)].editBinary(self.liststore[path][2])
-        print("Binary is now", self.liststore[path][1])
-        self.editpreview(path)
-
-    def HTTPS_toggled(self, widget, path):
-        self.liststore[path][2] = not self.liststore[path][2]
-        self.repo_instances[int(path)].editHTTPS(self.liststore[path][2])
-        print("HTTPS is now", self.liststore[path][2])
+        self.liststore[path][self.binary_index] = not self.liststore[path][self.binary_index]
+        self.repo_instances[int(path)].editBinary(self.liststore[path][self.binary_index])
+        print("Binary is now", self.liststore[path][self.binary_index])
         self.editpreview(path)
 
     def main_toggled(self, widget, path):
-        self.liststore[path][5] = not self.liststore[path][5]
-        self.repo_instances[int(path)].editMain(self.liststore[path][5])
-        print("Main is now", self.liststore[path][5])
+        self.liststore[path][self.main_index] = not self.liststore[path][self.main_index]
+        self.repo_instances[int(path)].editMain(self.liststore[path][self.main_index])
+        print("Main is now", self.liststore[path][self.main_index])
         self.editpreview(path)
 
     def contrib_toggled(self, widget, path):
-        self.liststore[path][6] = not self.liststore[path][6]
-        self.repo_instances[int(path)].editContrib(self.liststore[path][6])
-        print("Contrib is now", self.liststore[path][6])
+        self.liststore[path][self.contrib_index] = not self.liststore[path][self.contrib_index]
+        self.repo_instances[int(path)].editContrib(self.liststore[path][self.contrib_index])
+        print("Contrib is now", self.liststore[path][self.contrib_index])
         self.editpreview(path)
 
     def free_toggled(self, widget, path):
-        self.liststore[path][7] = not self.liststore[path][7]
-        self.repo_instances[int(path)].editFree(self.liststore[path][7])
-        print("Free is now", self.liststore[path][7])
+        print(self)
+        print(path)
+        self.liststore[path][self.free_index] = not self.liststore[path][self.free_index]
+        self.repo_instances[int(path)].editFree(self.liststore[path][self.free_index])
+        print("Free is now", self.liststore[path][self.free_index])
         self.editpreview(path)
 
     def write_new_repos(self, widget):
@@ -194,7 +199,6 @@ class MainWindow(Gtk.Window):
                 repo_dialog.destroy()
         else:
             repo_dialog.destroy()
-
 
     def show_dialog(self, message):
         active_dialog = gASEdialog.GeneralDialog(self, "Message dialog", message)
