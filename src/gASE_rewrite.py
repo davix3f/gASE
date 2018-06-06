@@ -17,6 +17,13 @@ def rewrite(lines, to_replace, file, backup=True):
                     oldval = lines[key]
                     lines[key] = item.edited
                     print("{0} has been replaced with \'{1}\'".format(oldval, lines[key]))
+                to_replace.remove(item)
+    if len(to_replace) > 0:
+        for item in to_replace:
+            if (item.edited != "") and (item.edited != item.line):
+                lines.append(item.edited)
+            else:
+                lines.append(item.line)
     if any_edit is False:
         print("Any edit found")
         return(False)
