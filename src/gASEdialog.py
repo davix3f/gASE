@@ -3,21 +3,19 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 import gASEutils
 
+
 class GeneralDialog(Gtk.Dialog):
-    def __init__(self, parent, alert):
-        Gtk.Dialog.__init__(self, "infoDialog", parent, 0,
+    def __init__(self, parent, message):
+        Gtk.Dialog.__init__(self, "Message", parent, 0,
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
             Gtk.STOCK_OK, Gtk.ResponseType.OK))
-        if type(alert) == str:
-            self.alert = alert
-        else:
-            raise TypeError("\'Alert\' must be string")
 
-        box = self.get_content_area().add(Gtk.Label(self.alert))
+        self.message = message
+
+        box = self.get_content_area().add(Gtk.Label(self.message))
 
         self.set_default_size(80, 80)
         self.show_all()
-
 
 
 

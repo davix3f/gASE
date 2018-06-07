@@ -17,7 +17,7 @@ class MainWindow(Gtk.Window):
         self.datas = datas
         self.repo_instances = repo_instances
 
-        self.set_default_size(800, 500)
+        self.set_default_size(900, 500)
         self.connect("delete-event", Gtk.main_quit)
 
         self.liststore = Gtk.ListStore(bool,  # commented 0
@@ -72,7 +72,7 @@ class MainWindow(Gtk.Window):
             "free":Gtk.CellRendererToggle(),
             "ftp":Gtk.CellRendererToggle(),
             "write":Gtk.Button("Write modifies"),
-            "remove":Gtk.Button("Remove repo"),
+            #"remove":Gtk.Button("Remove repo"),
             "add_repo":Gtk.Button("Add repo")
         }
         toggles_kw_list = [*toggles]
@@ -86,7 +86,7 @@ class MainWindow(Gtk.Window):
             "contrib":("toggled", self.contrib_toggled),
             "free":("toggled", self.free_toggled),
             "write":("clicked", self.write_new_repos),
-            "remove":("clicked", self.remove_repo),
+            #"remove":("clicked", self.remove_repo),
             "add_repo":("clicked", self.add_repo)
         }
 
@@ -119,7 +119,7 @@ class MainWindow(Gtk.Window):
         scrolledwin.set_min_content_height(200)
 
         obox.pack_start(toggles["write"], False, False, 0)
-        obox.pack_start(toggles["remove"], False, False, 1)
+        #obox.pack_start(toggles["remove"], False, False, 1)
         obox.pack_start(toggles["add_repo"], False, False, 1)
 
         vbox.pack_start(obox, False, False, 0)
@@ -185,6 +185,7 @@ class MainWindow(Gtk.Window):
             gASE_rewrite.rewrite(self.lines, self.repo_instances, "/etc/apt/sources.list")
 
     def remove_repo(self, widget):
+        print(self.liststore.get_selection())
         print("Repo removed")
 
     def add_repo(self, widget):
@@ -201,7 +202,7 @@ class MainWindow(Gtk.Window):
             repo_dialog.destroy()
 
     def show_dialog(self, message):
-        active_dialog = gASEdialog.GeneralDialog(self, "Message dialog", message)
+        active_dialog = gASEdialog.GeneralDialog(self, message)
         dialog_response = active_dialog.run()
 
         if dialog_response == Gtk.ResponseType.OK:
