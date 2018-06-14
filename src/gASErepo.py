@@ -1,4 +1,4 @@
-import line_analysis
+import gASEline_parse
 
 class Repo:
     def __init__(self, commented, binary, URL, branch, main, contrib, free, ftp, line, linenum=None):
@@ -89,4 +89,4 @@ class Repo:
                 else:
                     final_line += item
         print(final_line)
-        return(cls(*line_analysis.line_parse(final_line), None))
+        return(cls(*gASEline_parse.line_parse(final_line), None))

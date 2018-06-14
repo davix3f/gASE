@@ -4,10 +4,10 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
 # custom modules
-import line_analysis
+import gASEline_parse
 from gASErepo import Repo
 from gASE_main_window import MainWindow
-line_parse = line_analysis.line_parse
+line_parse = gASEline_parse.line_parse
 
 
 lines = []
