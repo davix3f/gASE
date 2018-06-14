@@ -30,4 +30,4 @@ def rewrite(lines, to_replace, file, backup=True):
     else:
         with open(file, "w") as file:
             for item in lines:
-                file.write(item)
+                file.write(item+"\n")
