@@ -4,8 +4,11 @@ from os import getcwd
 def rewrite(lines, to_replace, file, backup=True):
     any_edit = False
     if backup is True:
-        copyfile(file, file+".bkp")
-        print("File \'{0}\' has been backed up as \'{1}\'".format(file, file+"bkp"))
+        try:
+            copyfile(file, file+".bkp")
+            print("File \'{0}\' has been backed up as \'{1}\'".format(file, file+"bkp"))
+        except PermissionError:
+            print("ERROR: user cannot write to /etc/apt")
 
 
     for key, value in enumerate(lines):
@@ -28,6 +31,9 @@ def rewrite(lines, to_replace, file, backup=True):
         print("Any edit found")
         return(False)
     else:
-        with open(file, "w") as file:
-            for item in lines:
-                file.write(item+"\n")
+        try:
+            with open(file, "w") as file:
+                for item in lines:
+                    file.write(item+"\n")
+        except PermissionError:
+            print("ERROR: this user cannot write to this file.")
