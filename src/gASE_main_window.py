@@ -2,6 +2,10 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 import re
+from os import path
+import sys
+
+sys.path.insert(0, path.abspath(path.join(path.dirname(__file__), '.')))
 
 import gASE_rewrite
 import gASEdialog

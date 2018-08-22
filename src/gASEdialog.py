@@ -1,6 +1,12 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
+
+from os import path
+import sys
+
+sys.path.insert(0, path.abspath(path.join(path.dirname(__file__), '.')))
+
 import gASEutils
 
 
