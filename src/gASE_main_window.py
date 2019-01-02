@@ -127,8 +127,7 @@ class MainWindow(Gtk.Window):
 
 
     def editpreview(self, path):
-        if self.repo_instances[int(path)].edited != self.repo_instances[int(path)].line:
-            self.liststore[path][self.edited_index] = self.repo_instances[int(path)].edited
+        self.liststore[path][self.edited_index] = self.repo_instances[int(path)].edited
 
     def URL_edited(self, widget, path, URL):
         oldURL = self.liststore[path][self.url_index]
