@@ -1,7 +1,7 @@
 import gASEline_parse
 
 class Repo:
-    def __init__(self, commented, binary, URL, branch, main, contrib, free, ftp, line, linenum=None):
+    def __init__(self, commented, binary, URL, branch, main, contrib, free, line, linenum=None):
         self.commented = commented
         self.binary = binary
         self.URL = URL
@@ -9,7 +9,6 @@ class Repo:
         self.main = main
         self.contrib = contrib
         self.free = free
-        self.ftp = ftp
         self.line = line
         self.linenum = linenum
     edited = ""
@@ -17,7 +16,7 @@ class Repo:
     def returnFullInfo(self):
         return(self.commented, self.binary, self.URL,\
                self.branch,self.main, self.contrib, self.free,\
-               self.ftp, self.line, self.linenum)
+               self.line, self.linenum)
 
     def buildEdited(self):
         elements = ["#" if self.commented is True else "",

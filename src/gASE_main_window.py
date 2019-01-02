@@ -31,10 +31,9 @@ class MainWindow(Gtk.Window):
                                        bool,  # main 4
                                        bool,  # contrib 5
                                        bool,  # free 6
-                                       bool,  # ftp 7
-                                       str,  # line 8
-                                       int,  # line n 9
-                                       str # edited line preview 10
+                                       str,  # line 7
+                                       int,  # line n 8
+                                       str # edited line preview 9
                                        )
         [self.commented_index,
          self.binary_index,
@@ -43,7 +42,6 @@ class MainWindow(Gtk.Window):
          self.main_index,
          self.contrib_index,
          self.free_index,
-         self.ftp_index,
          self.line_index,
          self.linen_index,
          self.edited_index] = list(range(0, self.liststore.get_n_columns()))
@@ -81,8 +79,6 @@ class MainWindow(Gtk.Window):
         }
         toggles_kw_list = [*toggles]
 
-        gASEutils.list_epure(toggles_kw_list, "ftp")
-
         toggles_functions = {
             "commented":("toggled", self.comment_toggled),
             "binary":("toggled", self.binary_toggled),
@@ -104,7 +100,6 @@ class MainWindow(Gtk.Window):
             Gtk.TreeViewColumn("Main", toggles["main"], active=self.main_index),  # BOOL main/not main
             Gtk.TreeViewColumn("Contrib", toggles["contrib"], active=self.contrib_index),  # BOOL contrib/not contrib
             Gtk.TreeViewColumn("Free", toggles["free"], active=self.free_index),  # BOOL free/non-free
-            Gtk.TreeViewColumn("FTP", toggles["ftp"], active=self.ftp_index),  # BOOl ftp/not ftp in URL
             # STRINGS
             Gtk.TreeViewColumn("URL", rndr_URL, text=self.url_index),  # STR url
             Gtk.TreeViewColumn("Branch", rndr_BRANCH, text=self.branch_index),  # STR release branch (jessie, stable, testing..)
@@ -140,10 +135,6 @@ class MainWindow(Gtk.Window):
         oldURL = self.liststore[path][self.url_index]
         self.liststore[path][self.url_index] = URL
         self.repo_instances[int(path)].editURL(URL)
-        if re.search(r"(http://|https://)?ftp\.", URL):
-            self.liststore[path][self.ftp_index] = True
-        else:
-            self.liststore[path][self.ftp_index] = False
         print("\'" + oldURL + "\' changed to \'" + URL + "\'")
         self.editpreview(path)
 
