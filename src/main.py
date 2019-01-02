@@ -20,7 +20,9 @@ repo_instances = []
 
 with open("/etc/apt/sources.list", "r") as srcs_file:
     for line in srcs_file:
-        lines.append(line if line == "\n" else line.rstrip())
+        if line != "\n":
+                lines.append(line.rstrip())
+
 
 for key, value in enumerate(lines):
     if line_parse(value) != False:
