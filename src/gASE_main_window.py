@@ -72,8 +72,7 @@ class MainWindow(Gtk.Window):
             "main":Gtk.CellRendererToggle(),
             "contrib":Gtk.CellRendererToggle(),
             "free":Gtk.CellRendererToggle(),
-            "ftp":Gtk.CellRendererToggle(),
-            "write":Gtk.Button("Write modifies"),
+            "write":Gtk.Button("Write edits"),
             #"remove":Gtk.Button("Remove repo"),
             "add_repo":Gtk.Button("Add repo")
         }
