@@ -166,8 +166,6 @@ class MainWindow(Gtk.Window):
         self.editpreview(path)
 
     def free_toggled(self, widget, path):
-        print(self)
-        print(path)
         self.liststore[path][self.free_index] = not self.liststore[path][self.free_index]
         self.repo_instances[int(path)].editFree(self.liststore[path][self.free_index])
         print("Free is now", self.liststore[path][self.free_index])
